@@ -65,30 +65,35 @@ eligibility_rules:
         operator: between
         min: 21
         max: 60
+        weight: 0.10
         message: "Age must be between 21 and 60"
 
       - id: cibil_score
         field: cibil_score
         operator: gte
         value: 650
+        weight: 0.30
         message: "CIBIL score must be at least 650"
 
       - id: foir
         field: foir
         operator: lte
         value: 0.5
+        weight: 0.20
         message: "FOIR (existing EMIs / income) must be 0.50 or below"
 
       - id: employment_type
         field: employment_type
         operator: in
         values: ["salaried", "self_employed"]
+        weight: 0.10
         message: "Employment type must be salaried or self-employed"
 
       - id: no_written_off_accounts
         field: written_off_accounts
         operator: eq
         value: 0
+        weight: 0.20
         message: "Customer must have no written-off accounts"
 
       - id: loan_amount_cap
@@ -96,4 +101,5 @@ eligibility_rules:
         operator: lte_multiplier
         multiplier_field: monthly_income
         multiplier: 10
+        weight: 0.10
         message: "Requested amount cannot exceed 10x monthly income"

@@ -15,6 +15,8 @@ def run(profile, config):
     rule_results = []     # flat list of every rule's pass/fail (matches the brief)
     fail_reasons = []     # ids of rules that failed
     group_outcomes = []   # one True/False per group, combined at the end
+    total_weight = 0.0    # for the weighted risk score (bonus)
+    failed_weight = 0.0
 
     for group in groups:
         logic = group.get("logic", "AND").upper()
@@ -27,11 +29,15 @@ def run(profile, config):
 
             passed = operators.evaluate(profile[field], rule, profile)
             result = {"rule": rule["id"], "passed": passed}
+
+            weight = float(rule.get("weight", 1.0))
+            total_weight += weight
             if not passed:
                 # The failure message lives in YAML, so wording/policy changes
                 # need no code change.
                 result["reason"] = rule.get("message", f"Rule '{rule['id']}' failed")
                 fail_reasons.append(rule["id"])
+                failed_weight += weight
 
             rule_results.append(result)
             passed_flags.append(passed)
@@ -43,10 +49,14 @@ def run(profile, config):
 
     eligible = all(group_outcomes) if group_outcomes else False
 
+    # Bonus: risk score = share of (weighted) rules that failed, 0-100.
+    risk_score = round((failed_weight / total_weight) * 100, 2) if total_weight else 0.0
+
     return {
         "customer_id": profile.get("customer_id"),
         "mode": "eligibility",
         "eligible": eligible,
+        "risk_score": risk_score,
         "rules": rule_results,
         "fail_reasons": fail_reasons,
         "next_step": _next_step(eligible, rule_results),
