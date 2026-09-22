@@ -1,0 +1,11 @@
+{
+  "customer_id": "C002",
+  "age": 34,
+  "cibil_score": 742,
+  "monthly_income": 85000,
+  "existing_emis": 12000,
+  "foir": 0.14,
+  "employment_type": "self_employed",
+  "written_off_accounts": 0,
+  "requested_amount": 500000
+}
