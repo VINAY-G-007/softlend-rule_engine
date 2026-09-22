@@ -1,0 +1,14 @@
+# Store text files with LF line endings in the repository and check them out
+# with LF on every OS, so Windows and Linux never disagree about what changed.
+* text=auto eol=lf
+
+# Windows batch files need CRLF line endings.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files: never touch them.
+*.png binary
+*.jpg binary
+*.ico binary
+*.db binary
+*.sqlite3 binary
